@@ -28,41 +28,45 @@ public class KMP {
 
 	private static Integer[] searchSubStr(char[] txt, char[] pt) {
 		int i = 0, k = 0;
-		int tLen = txt.length;
-		int pLen = pt.length;
+		int tlen = txt.length;
+		int plen = pt.length;
 		List<Integer> rs = new ArrayList<>();
 
 		int[] b = pre(pt);
 
-		while (i < tLen) {
+		while (i < tlen) {
 			while (k >= 0 && txt[i] != pt[k]) {
 				k = b[k];
 			}
 			i++;
 			k++;
-			if (k == pLen) {
-				int idx = (i - pLen);
+			if (k == plen) {
+				int idx = i - plen;
 				rs.add(idx);
 				k = b[k];
 			}
 		}
+
 		return rs.toArray(new Integer[0]);
 	}
 
 	private static int[] pre(char[] pt) {
-		int i =0, k =-1;
-		int pLen = pt.length;
-		int[] b = new int[pLen + 1];
-		
+		int i = 0;
+		int k = -1;
+		int plen = pt.length;
+
+		int[] b = new int[plen + 1];
+
 		b[i] = k;
-		while(i < pLen){
-			if(k >= 0 && pt[i] != pt[k]){
+		while (i < plen) {
+			if (k >= 0 && pt[i] != pt[k]) {
 				k = b[k];
 			}
 			i++;
 			k++;
 			b[i] = k;
 		}
+
 		return b;
 	}
 

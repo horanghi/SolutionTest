@@ -29,47 +29,45 @@ public class MST {
 
 	public static void main(String[] args) {
 		sc = new Scanner(System.in);
-
 		int N = sc.nextInt();
 		int[] label = new int[N];
-		List<Vertex> vList = new ArrayList<>();
+		List<Vertex> vrs = new ArrayList<>();
 
-		for (int i = 0; i < N; ++i) {
+		for (int i = 0; i < N; i++) {
 			label[i] = i;
-			for (int j = 0; j < N; ++j) {
-				int weight = sc.nextInt();
+			for (int j = 0; j < N; j++) {
+				int cost = sc.nextInt();
 				if (i < j) {
-					vList.add(new Vertex(i, j, weight));
+					vrs.add(new Vertex(i, j, cost));
 				}
 			}
 		}
-		Vertex[] points = vList.toArray(new Vertex[0]);
+		Vertex[] points = vrs.toArray(new Vertex[0]);
 
-		// 1. 정렬
+		// 1. sort
 		Arrays.sort(points);
 
-		// 2. 어사이클
-		int nodes = 0, index = 0;
+		// 2. acycle
+		int nodes = 0;
+		int idx = 0;
 		int cost = 0;
-		while (nodes < N - 1) { // 선의 개수는 주어진 점보다 1개 작다.
-
-			Vertex point = points[index];
-
-			if (label[point.x] != label[point.y]) {
-
-				int tmp = label[point.y]; // last dst 기준의 label ?
-
-				for (int i = 0; i < N; ++i) { //
-					if (tmp == label[i])
-						label[i] = label[point.x];
+		while (nodes < N - 1) {
+			Vertex p = points[idx];
+			if (label[p.x] != label[p.y]) {
+				int tmpLabel = label[p.y];
+				for (int i = 0; i < N; i++) {
+					if(tmpLabel == label[i]){
+						label[i] = label[p.x];
+					}
 				}
-				cost += point.cost;
+				cost += p.cost;
 				nodes++;
 			}
-			index++;
+			idx++;
 		}
 
 		System.out.println(cost);
+
 	}
 
 	public static void quickSort(Vertex[] array, int s, int e) {
