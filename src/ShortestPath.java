@@ -6,21 +6,6 @@ class ShortestPath {
 	// from the set of vertices not yet included in shortest path tree
 	static final int V = 9;
 
-	int minDistance(int dist[], Boolean sptSet[]) {
-		// Initialize min value
-		int min = Integer.MAX_VALUE;
-		int min_index = -1;
-
-		for (int v = 0; v < V; v++) {
-			if (sptSet[v] == false && dist[v] <= min) {
-				min = dist[v];
-				min_index = v;
-			}
-		}
-
-		return min_index;
-	}
-
 	// A utility function to print the constructed distance array
 	void printSolution(int dist[], int n) {
 		System.out.println("Vertex   Distance from Source");
@@ -28,54 +13,39 @@ class ShortestPath {
 			System.out.println(i + " \t\t " + dist[i]);
 	}
 
-	// Funtion that implements Dijkstra's single source shortest path
-	// algorithm for a graph represented using adjacency matrix
-	// representation
 	void dijkstra(int graph[][], int src) {
-		int dist[] = new int[V]; // src에서 i까지의 거리 리스트 .
-
-		Boolean sptSet[] = new Boolean[V]; // 방문 여부.
-
-		// Initialize all distances as INFINITE and stpSet[] as false
+		int dist[] = new int[V];
+		boolean sptSet[] = new boolean[V];
 		for (int i = 0; i < V; i++) {
 			dist[i] = Integer.MAX_VALUE;
 			sptSet[i] = false;
 		}
+		dist[src] = 0;
 
-		dist[src] = 0; // 출발지는 0 거리 지정
-
-		// Find shortest path for all vertices
-		for (int count = 0; count < V - 1; count++) { // 모든 vertice에서 출발하여 최저 거리
-														// 찾기.
-
-			// Pick the minimum distance vertex from the set of vertices
-			// not yet processed. u is always equal to src in first
-			// iteration.
-			int u = minDistance(dist, sptSet);
-			System.out.println("u : " + u);
-
-			// Mark the picked vertex as processed
+		for (int c = 0; c < V - 1; c++) {
+			int u = minDist(dist, sptSet);
 			sptSet[u] = true;
-
-			// Update dist value of the adjacent vertices of the
-			// picked vertex.
 			for (int v = 0; v < V; v++) {
-
-				// Update dist[v] only if is not in sptSet, there is an
-				// edge from u to v, and total weight of path from src to
-				// v through u is smaller than current value of dist[v]
-
-				// 노드가 방문한적 없고 src->v까지의거리가 무한대가 아니고 소스의 거리가 맥스가 아니고 소스와의 거리와
-				// src-> 거리 의 합이 현재거리값보다 작다면
 				if (!sptSet[v] && graph[u][v] != 0 && dist[u] != Integer.MAX_VALUE
-						&& (dist[u] + graph[u][v]) < dist[v]) {
-					dist[v] = dist[u] + graph[u][v];
+						&& (graph[u][v] + dist[u] < dist[v])) {
+					dist[v] = graph[u][v] + dist[u];
 				}
 			}
 		}
 
-		// print the constructed distance array
 		printSolution(dist, V);
+	}
+
+	private int minDist(int[] dist, boolean[] sptSet) {
+		int min = Integer.MAX_VALUE;
+		int min_idx = -1;
+		for (int v = 0; v < V; v++) {
+			if (!sptSet[v] && dist[v] <= min) {
+				min = dist[v];
+				min_idx = v;
+			}
+		}
+		return min_idx;
 	}
 
 	// Driver method

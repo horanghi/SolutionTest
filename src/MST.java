@@ -30,44 +30,45 @@ public class MST {
 	public static void main(String[] args) {
 		sc = new Scanner(System.in);
 		int N = sc.nextInt();
-		int[] label = new int[N];
-		List<Vertex> vrs = new ArrayList<>();
+		int label[] = new int[N];
+		List<Vertex> vlist = new ArrayList<>();
 
+		// input
 		for (int i = 0; i < N; i++) {
 			label[i] = i;
 			for (int j = 0; j < N; j++) {
-				int cost = sc.nextInt();
+				int w = sc.nextInt();
 				if (i < j) {
-					vrs.add(new Vertex(i, j, cost));
+					vlist.add(new Vertex(i, j, w));
 				}
 			}
 		}
-		Vertex[] points = vrs.toArray(new Vertex[0]);
 
-		// 1. sort
+		Vertex[] points = vlist.toArray(new Vertex[0]);
+
+		// 1.sort
 		Arrays.sort(points);
 
-		// 2. acycle
-		int nodes = 0;
-		int idx = 0;
+		// 2.a-cycle
+		int nodes = 0, idx = 0;
 		int cost = 0;
+
 		while (nodes < N - 1) {
 			Vertex p = points[idx];
 			if (label[p.x] != label[p.y]) {
 				int tmpLabel = label[p.y];
-				for (int i = 0; i < N; i++) {
-					if(tmpLabel == label[i]){
-						label[i] = label[p.x];
+				for (int v = 0; v < N; v++) {
+					if (tmpLabel == label[v]) {
+						label[v] = label[p.x];
 					}
 				}
-				cost += p.cost;
 				nodes++;
+				cost += p.cost;
+
 			}
 			idx++;
 		}
-
 		System.out.println(cost);
-
 	}
 
 	public static void quickSort(Vertex[] array, int s, int e) {
